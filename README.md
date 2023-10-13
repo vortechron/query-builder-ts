@@ -5,7 +5,7 @@
 You can install package using yarn (or npm):
 
 ```bash
-yarn add query-builder
+yarn add @vortechron/query-builder-ts
 ```
 
 ## Usage
