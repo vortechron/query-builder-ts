@@ -17,7 +17,7 @@ Usage of this package is quite EZ.
 Here is a simple example:
 
 ```js
-import { query } from "query-builder";
+import { query } from "@vortechron/query-builder-ts";
 
 const url = query("/users")
 	.filter("age", 20)
@@ -45,7 +45,7 @@ Here is an example with `axios`:
 
 ```js
 import axios from "axios";
-import { query } from "query-builder";
+import { query } from "@vortechron/query-builder-ts";
 
 const activeUsers = axios.get(
 	query("/users").filter("status", "active").sort("-id").page(1).build()
@@ -59,7 +59,7 @@ Let's imagine that you need to filter by username only if its length is more tha
 Yeah, you can do it like this:
 
 ```js
-import { query } from "js-query-builder";
+import { query } from "@vortechron/query-builder-ts";
 
 const username = "hi";
 
@@ -75,7 +75,7 @@ const url = q.build();
 But in such case it would be better to chain `.when()` method:
 
 ```js
-import { query } from "js-query-builder";
+import { query } from "@vortechron/query-builder-ts";
 
 const username = "hi";
 
@@ -91,7 +91,7 @@ Looks much more clear, does not it?
 Sometimes you may want to tap the builder. `.tap()` method is almost the same as `.when()` but does not require condition.
 
 ```js
-import { query } from "js-query-builder";
+import { query } from "@vortechron/query-builder-ts";
 
 const url = query("/users")
 	.sort("id")
@@ -109,12 +109,12 @@ You need to forget some filters, sorts, includes etc.?
 Here you are:
 
 ```js
-import { query } from "js-query-builder";
+import { query } from "@vortechron/query-builder-ts";
 
 const url = query("/users")
 	.include("comments", "posts")
 	.sort("name")
-	.forgetInclude("comments")
+	.forget("include", "comments")
 	.build();
 ```
 
@@ -125,10 +125,10 @@ There may be cases when you need to customize parameter names.
 You can define custom parameter names globally this way:
 
 ```js
-import { query, QueryBuilder } from "js-query-builder";
+import { query, QueryBuilder } from "@vortechron/query-builder-ts";
 
 // you may make such call is application bootstrapping file
-QueryBuilder.defineCustomParameterNames({
+QueryBuilder.defineAliases({
 	page: "p",
 	sort: "s",
 });
@@ -153,10 +153,7 @@ Please see [CONTRIBUTING](CONTRIBUTING.md) for details.
 
 ## Credits
 
--   [Ilya Sakovich](https://github.com/hivokas)
--   [All Contributors](../../contributors)
-
-Inspired by [robsontenorio/vue-api-query](https://github.com/robsontenorio/vue-api-query).
+Inspired by [coderello/js-query-builder](https://github.com/coderello/js-query-builder).
 
 ## License
 
