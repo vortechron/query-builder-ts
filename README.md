@@ -1,4 +1,4 @@
-<p><b>JavaScript/TS Query Builder</b> provides a way to build a query string compatible with <a href="https://github.com/spatie/laravel-query-builder">spatie/laravel-query-builder</a>.</p>
+<p><b>JavaScript/TypeScript Query Builder</b> provides a way to build a query string compatible with <a href="https://github.com/spatie/laravel-query-builder">spatie/laravel-query-builder</a>.</p>
 
 ## Install
 
