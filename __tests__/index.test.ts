@@ -140,6 +140,62 @@ test("query can forget value", () => {
 	expect(path).toBe("/users?sort=age");
 });
 
+test("query can use scopes", () => {
+	const testScope = (query: QueryBuilder) => {
+		return query.filter("name", "john");
+	};
+	const path = query("/users").scopes(testScope).build();
+
+	expect(path).toBe("/users?filter[name]=john");
+});
+
+test("query can build as array", () => {
+	const path = query("/users")
+		.filter("name", "john")
+		.sort("name", "age")
+		.buildAsArray();
+
+	expect(path).toEqual(["filter[name]=john", "sort=name,age"]);
+});
+
+test("query can build as array include path", () => {
+	const path = query("/users")
+		.filter("name", "john")
+		.sort("name", "age")
+		.buildAsArray({
+			includePath: true,
+		});
+
+	expect(path).toEqual(["/users", "filter[name]=john", "sort=name,age"]);
+});
+
+test("query can build as array excludes", () => {
+	const path = query("/users")
+		.filter("name", "john")
+		.sort("name", "age")
+		.page(2)
+		.buildAsArray({
+			excludes: ["sort"],
+		});
+
+	expect(path).toEqual(["filter[name]=john"]);
+});
+
+test("query can build as array includePagination", () => {
+	const path = query("/users")
+		.filter("name", "john")
+		.sort("name")
+		.scopes((query) => {
+			return query.sort("age");
+		})
+		.page(2)
+		.buildAsArray({
+			includePagination: true,
+		});
+
+	expect(path).toEqual(["filter[name]=john", "sort=name,age", "page=2"]);
+});
+
 test("query can set alias", () => {
 	QueryBuilder.defineAliases({
 		filter: "f",

@@ -1,3 +1,5 @@
+import { query } from "..";
+
 class QueryBuilder {
 	_path: string;
 	_params: Record<string, string[]> = {};
@@ -115,6 +117,12 @@ class QueryBuilder {
 		return this;
 	}
 
+	scopes(...scopes: ((query: QueryBuilder) => QueryBuilder)[]) {
+		scopes.forEach((scope) => scope(this));
+
+		return this;
+	}
+
 	buildParams(key: string) {
 		const param = this._params[key];
 		if (param) {
@@ -122,6 +130,35 @@ class QueryBuilder {
 		}
 
 		return "";
+	}
+
+	buildAsArray(options?: {
+		includePath?: boolean;
+		includePagination?: boolean;
+		excludes?: string[];
+	}) {
+		let data: string[] = [];
+
+		if (options?.includePath) {
+			data.push(this._path);
+		}
+
+		Object.keys(this._params).map((key) => {
+			if (options?.excludes?.includes(key)) {
+				return;
+			}
+
+			if (
+				!options?.includePagination &&
+				(key === "page" || key === "limit")
+			) {
+				return;
+			}
+
+			data.push(this.buildParams(key));
+		});
+
+		return data;
 	}
 
 	build() {

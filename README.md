@@ -19,9 +19,12 @@ Here is a simple example:
 ```js
 import { query } from "@vortechron/query-builder-ts";
 
-const url = query("/users")
+const nameSortScope = (q) => q.sort("name");
+
+const theQuery = query("/users")
 	.filter("age", 20)
-	.sort("-created_at", "name")
+	.sort("-created_at")
+	.scopes(nameSortScope)
 	.include("posts", "comments")
 	.append("fullname", "ranking")
 	.fields({
@@ -29,14 +32,26 @@ const url = query("/users")
 		comments: ["id", "content"],
 	})
 	.param("custom_param", "value")
-	.page(1)
-	.build();
+	.page(1);
 
-console.log(url);
+console.log(theQuery.build());
 // /users?append=fullname%2Cranking&custom_param=value&fields%5Bcomments%5D=id%2Ccontent&fields%5Bposts%5D=id%2Cname&filter%5Bage%5D=20&include=posts%2Ccomments&page=1&sort=-created_at%2Cname
 
-console.log(decodeURIComponent(url));
+console.log(decodeURIComponent(theQuery.build()));
 // /users?append=fullname,ranking&custom_param=value&fields[comments]=id,content&fields[posts]=id,name&filter[age]=20&include=posts,comments&page=1&sort=-created_at,name
+
+// usefull when using with framework like tanstack/query for query keys
+console.log(theQuery.buildAsArray());
+// ["filter[age]=20", "sort=-created_at,name", "include=posts,comments", "append=fullname,ranking", "fields[posts]=id,name", "fields[comments]=id,content", "custom_param=value"]
+
+console.log(
+	theQuery.buildAsArray({
+		includePath: true,
+		includePagination: true,
+		excludes: ["page", "sort"],
+	})
+);
+// ["/users", "filter[age]=20", "include=posts,comments", "append=fullname,ranking", "fields[posts]=id,name", "fields[comments]=id,content", "custom_param=value", "page=1"]
 ```
 
 ### Making requests
